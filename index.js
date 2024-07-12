@@ -52,10 +52,23 @@ app.get('/api/persons/:id', (request, response) => {
 app.delete('/api/persons/:id', (request, response) => {
     const id  = (request.params.id)
     persons = persons.filter(person => person.id !== id)
-
     response.status(204).end()
-    
 })
+
+app.post('/api/persons', (request, response) => {
+    const body = request.body
+
+    const person = {
+      id: String(Math.floor(Math.random() * (Math.floor(50) - Math.ceil(1)) + Math.ceil(1))),
+      name: body.name,
+      number: body.number
+      
+    }
+  
+    persons = persons.concat(person)
+  
+    response.json(person)
+  })
 
 const PORT = 3001
 app.listen(PORT)
