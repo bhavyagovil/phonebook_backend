@@ -57,6 +57,21 @@ app.delete('/api/persons/:id', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
     const body = request.body
+    const names = persons.map(person => person.name)
+
+    if (!body.name || !body.number) {
+        return response.status(400).json({ 
+          error: 'name or number missing' 
+        })
+      }
+
+    for (let i = 0; i < persons.length +1; i++) {
+       if (body.name === names[i]) {
+        return response.status(400).json({
+            error: 'person already exists'
+        })
+       }
+      }
 
     const person = {
       id: String(Math.floor(Math.random() * (Math.floor(50) - Math.ceil(1)) + Math.ceil(1))),
