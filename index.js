@@ -27,6 +27,7 @@ let persons = [
 
 app.use(express.json())
 app.use(morgan('tiny'))
+app.use(morgan(':method :url :body'))
 
 
 app.get('/api/persons', (request, response) => {
@@ -86,6 +87,7 @@ app.post('/api/persons', (request, response) => {
     persons = persons.concat(person)
   
     response.json(person)
+    morgan.token('body', request => JSON.stringify(request.body))
   })
 
 const PORT = 3001
