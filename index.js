@@ -2,6 +2,8 @@ const express = require('express')
 const morgan = require('morgan')
 const app = express()
 
+morgan.token('body', request => JSON.stringify(request.body))
+
 let persons = [
     { 
       "id": "1",
@@ -24,10 +26,15 @@ let persons = [
       "number": "39-23-6423122"
     }
 ]
+const cors = require('cors')
+
+app.use(cors())
+
 
 app.use(express.json())
 app.use(morgan('tiny'))
 app.use(morgan(':method :url :body'))
+
 
 
 app.get('/api/persons', (request, response) => {
@@ -87,8 +94,10 @@ app.post('/api/persons', (request, response) => {
     persons = persons.concat(person)
   
     response.json(person)
-    morgan.token('body', request => JSON.stringify(request.body))
+   
   })
 
-const PORT = 3001
-app.listen(PORT)
+const PORT = process.env.PORT || 3001
+app.listen(PORT, () => {
+  console.log(`Service on ${PORT}`)
+})
