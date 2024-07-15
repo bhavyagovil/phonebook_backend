@@ -34,8 +34,7 @@ app.use(cors())
 app.use(express.json())
 app.use(morgan('tiny'))
 app.use(morgan(':method :url :body'))
-
-
+app.use(express.static('dist'))
 
 app.get('/api/persons', (request, response) => {
     response.json(persons)
@@ -85,7 +84,7 @@ app.post('/api/persons', (request, response) => {
       }
 
     const person = {
-      id: String(Math.floor(Math.random() * (Math.floor(50) - Math.ceil(1)) + Math.ceil(1))),
+      id: body.name,
       name: body.name,
       number: body.number
       
