@@ -44,6 +44,14 @@ app.get('/api/persons', (request, response) => {
         `<p>Phonebook has info for ${number} people </p> <p> ${date} </p>`)
 })  */
 
+app.get('/info', (request, response, next) => {
+  const date = new Date()
+  Person.find({})
+    .then(people => response.send(`<p>Phonebook has info for ${people.length} people</p > <p>${date}</p > `))
+    .catch(error => next(error))
+
+})
+
 app.get('/api/persons/:id', (request, response, next) => {
   Person.findById(request.params.id)
   .then(person => {
@@ -63,12 +71,14 @@ app.delete('/api/persons/:id', (request, response, next) => {
   .catch(error => next(error))
 })
 
+//OLD POST WHICH DOESNT UPDATE
   app.post('/api/persons', (request, response) => {
     const body = request.body
   
-    if (body.name === undefined) {
+    if (body.name === undefined || body.number === undefined) {
       return response.status(400).json({ error: 'name missing' })
     } 
+
   
     const person = new Person({
       name: body.name,
@@ -80,6 +90,47 @@ app.delete('/api/persons/:id', (request, response, next) => {
     })
   })
 
+  
+   /*  app.post('/api/persons', (request, response) =>{
+      const body = request.body
+      if (body.name === undefined || body.number === undefined) {
+        return response.status(400).json({ error: 'name missing' })
+      } 
+
+      Person.find({}).then(result => {
+        const names = result.map(person => person.name)}
+       )
+   
+       for (let i = 0; i < names.length; i++) {
+         if (names[i] === body.name) {
+           updateName()   
+         } else {
+           const person = new Person({
+         name: body.name,
+         number: body.number,
+       })
+     
+       person.save().then(savedPerson => {
+         response.json(savedPerson)
+       })
+         }
+       }
+    }) */
+
+    app.put('/api/persons/:id', (request, response, next) => {
+      const body = request.body
+    
+      const person = {
+        name: body.name,
+        number: body.number,
+      }
+    
+      Person.findByIdAndUpdate(request.params.id, person, { new: true })
+        .then(updatedPerson => {
+          response.json(updatedPerson)
+        })
+        .catch(error => next(error))
+    })
 
 app.use(unknownEndpoint)
 app.use(errorHandler)
@@ -89,31 +140,3 @@ app.listen(PORT, () => {
   console.log(`Service on ${PORT}`)
 })
 
-/* app.post('/api/persons', (request, response) => {
-    const body = request.body
-    const names = persons.map(person => person.name)
-
-    if ((body.name === undefined) || (body.number === undefined)) {
-        return response.status(400).json({ 
-          error: 'name or number missing' 
-        })
-      }
-
-    for (let i = 0; i < persons.length +1; i++) {
-       if (body.name === names[i]) {
-        return response.status(400).json({
-            error: 'person already exists'
-        })
-       }
-      }
-
-    const person = {
-      /* id: String(Math.floor(Math.random() * (Math.floor(50) - Math.ceil(1)) + Math.ceil(1))), 
-      name: body.name,
-      number: body.number
-      
-    }
-  
-   person.save().then(savedPerson => {response.json(savedPerson)})
-   
-  }) */
