@@ -18,7 +18,7 @@ const personSchema = new mongoose.Schema({
 const Person = mongoose.model('Person', personSchema)
 
 const printAll = () => {
-    Person.find({}).then(result => {
+  Person.find({}).then(result => {
     result.forEach(person => {
       console.log(person)
     })
@@ -26,35 +26,16 @@ const printAll = () => {
   })}
 
 
-/* if (process.argv.length<4) {
-  console.log('phonebook:')
-  printAll()
-  process.exit(1)
-} */
-
-
 if (!inputName && !inputNumber) {
-    printAll()
-  } else {
-    const person = new Person({
-      name: inputName,
-      number: inputNumber,
-    })
-  
-    person.save().then(result => {
-      console.log(`added ${inputName} number ${inputNumber} to phonebook`)
-      mongoose.connection.close()
-    })
-  }
+  printAll()
+} else {
+  const person = new Person({
+    name: inputName,
+    number: inputNumber,
+  })
 
-/* 
-const person = new Person({
-  name: inputName,
-  number: inputNumber,
-}) 
-
-person.save().then(result => {
-  console.log( `added ${inputName} number ${inputNumber} to phonebook`)
-  mongoose.connection.close()
-})
- */
+  person.save().then(() => {
+    console.log(`added ${inputName} number ${inputNumber} to phonebook`)
+    mongoose.connection.close()
+  })
+}
