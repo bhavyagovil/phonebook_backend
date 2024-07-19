@@ -23,7 +23,15 @@ mongoose.connect(url)
       minLength: 3,
       required: true
     },
-    number: String,
+    number: {
+      type: String, 
+      minLength: 8,
+      validate: {
+        validator: function(v) {
+          return ( (v.split("-").length-1 === 1) && v.split("-")[0].length >= 2)
+        }
+      }
+    },
   })
   
   personSchema.set('toJSON', {
